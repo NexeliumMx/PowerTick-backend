@@ -1,33 +1,32 @@
 const { app } = require('@azure/functions');
-const { getTimestamp } = require('./dbQueries/getTimestamp'); // Import the getTimestamp function
+const { getTimestamp } = require('./dbQueries/getTimestamp');
 
-// Set up the HTTP-triggered function
-app.http('getData', {
-    methods: ['GET', 'POST'],
+app.http('getTimestamp', {
+    methods: ['GET'],
     authLevel: 'anonymous',
     handler: async (request, context) => {
         context.log(`Http function processed request for url "${request.url}"`);
 
         try {
-            // Fetch the latest timestamp using the getTimestamp function
             const latestTimestamp = await getTimestamp();
 
-            // Return the fetched timestamp as the response
             return {
-                body: {
-                    message: 'Latest timestamp retrieved successfully',
-                    timestamp: latestTimestamp
+                body: JSON.stringify({ timestamp: latestTimestamp }),
+                headers: {
+                    'Content-Type': 'application/json'
                 }
             };
         } catch (error) {
-            // Handle errors during the database query
             context.log.error('Error fetching timestamp:', error);
 
             return {
-                status: 500, // Internal Server Error
-                body: {
+                status: 500,
+                body: JSON.stringify({
                     message: 'Error fetching timestamp',
                     error: error.message
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
                 }
             };
         }
