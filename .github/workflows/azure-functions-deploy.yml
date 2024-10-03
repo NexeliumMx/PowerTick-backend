@@ -18,6 +18,9 @@ jobs:
       with:
         node-version: '20.x'
 
+    - name: Install dependencies
+      run: npm install
+
     - name: Install Azure CLI
       run: |
         curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
@@ -32,4 +35,4 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Deploy Azure Functions
-      run: func azure functionapp publish powertic-api --javascript
+      run: func azure functionapp publish powertic-api --javascript --source ./src/functions
