@@ -1,0 +1,38 @@
+name: Azure Functions Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20.x'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Install Azure CLI
+      run: |
+        curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+
+    - name: Install Azure Functions Core Tools
+      run: |
+        npm install -g azure-functions-core-tools@4 --unsafe-perm true
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Deploy Azure Functions
+      run: func azure functionapp publish powertic-api --javascript --source ./src/functions
