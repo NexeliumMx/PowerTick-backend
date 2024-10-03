@@ -1,4 +1,4 @@
-const client = require('./postgresqlClient');
+const client = require('../../postgresqlClient');
 
 async function getTimestamp() {
     try {
