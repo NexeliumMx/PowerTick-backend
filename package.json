@@ -9,6 +9,7 @@
   "dependencies": {
     "@azure/functions": "^4.0.0",
     "axios": "^1.7.7",
+    "luxon": "^3.5.0",
     "pg": "^8.13.0",
     "pg-types": "^2.2.0"
   },

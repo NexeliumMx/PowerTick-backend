@@ -1,26 +1,27 @@
 SET CONSTRAINTS ALL DEFERRED;
 
-CREATE SCHEMA IF NOT EXISTS PowerTIC;
-SET search_path TO PowerTIC;
+CREATE SCHEMA IF NOT EXISTS Demo;
+SET search_path TO Demo;
 
 CREATE TABLE IF NOT EXISTS Brokers (
   broker_name TEXT PRIMARY KEY,
   clients INT NOT NULL,
   facturation INT NOT NULL,
   contract_date TIMESTAMPTZ NOT NULL
-  );
+);
+
 CREATE TABLE IF NOT EXISTS clients (
   client TEXT PRIMARY KEY,
   broker TEXT NOT NULL,
-  cloud_services boolean NOT NULL,
-  payment boolean NOT NULL,
+  cloud_services BOOLEAN NOT NULL,
+  payment BOOLEAN NOT NULL,
   payment_amount INT NOT NULL,
   FOREIGN KEY (broker)
     REFERENCES Brokers (broker_name)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
-  
 );
+
 CREATE TABLE IF NOT EXISTS Meters (
   serial_number TEXT PRIMARY KEY,
   sunspec_id TEXT NOT NULL,
@@ -28,12 +29,12 @@ CREATE TABLE IF NOT EXISTS Meters (
   manufacturer TEXT NOT NULL,
   model TEXT NOT NULL,
   "version" TEXT NOT NULL,
-  client text not null,
-  branch text not null,
-  "location" text NOT NULL,
-  load_center text NOT NULL,
+  client TEXT NOT NULL,
+  branch TEXT NOT NULL,
+  "location" TEXT NOT NULL,
+  load_center TEXT NOT NULL,
   register_date TIMESTAMPTZ NOT NULL,
-  facturation_intervalmonths smallint not null,
+  facturation_intervalmonths SMALLINT NOT NULL,
   UNIQUE (serial_number),
   FOREIGN KEY (client)
     REFERENCES clients (client)
@@ -51,10 +52,10 @@ CREATE TABLE IF NOT EXISTS ModbusQueries (
   model TEXT NOT NULL,
   mod_default TEXT NOT NULL,
   register_number SMALLINT NOT NULL,
-  indb bool NOT NULL,
-  setup bool NOT NULL,
+  indb BOOLEAN NOT NULL,
+  setup BOOLEAN NOT NULL,
   UNIQUE (Serial),
-  UNIQUE (Modbus_Address)
+  UNIQUE (modbus_Address)
 );
 
 CREATE TABLE IF NOT EXISTS Measurements (
@@ -121,7 +122,7 @@ CREATE TABLE IF NOT EXISTS Measurements (
   total_var_hours_exported_q4_phase_b INT NOT NULL,
   total_var_hours_exported_q4_phase_c INT NOT NULL,
   serial_number TEXT NOT NULL,
-  PRIMARY KEY  ("timestamp",serial_number),
+  PRIMARY KEY ("timestamp", serial_number),
   FOREIGN KEY (serial_number)
     REFERENCES Meters (serial_number)
     ON DELETE NO ACTION
@@ -129,5 +130,10 @@ CREATE TABLE IF NOT EXISTS Measurements (
 );
 
 SET CONSTRAINTS ALL IMMEDIATE;
-insert into powertic.brokers (broker_name,clients,facturation values ('not_set',0,0)
-insert into powertic.clients (broker,client,cloud_services,payment,payment_amount) values ('not_set','not_set',FALSE,FALSE,0)
+
+-- Insert default values
+INSERT INTO demo.brokers (broker_name, clients, facturation, contract_date) 
+VALUES ('not_set', 0, 0, NOW());
+
+INSERT INTO demo.clients (broker, client, cloud_services, payment, payment_amount) 
+VALUES ('not_set', 'not_set', FALSE, FALSE, 0);
