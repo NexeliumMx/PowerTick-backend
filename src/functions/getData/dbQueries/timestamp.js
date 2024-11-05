@@ -1,6 +1,6 @@
 const client = require('../../postgresqlClient');
 
-async function getTimestamp() {
+async function timestamp() {
     try {
         const query = 'SELECT timestamp FROM "powertic"."measurements" ORDER BY "timestamp" DESC LIMIT 1;';
         const result = await client.query(query);
@@ -16,4 +16,4 @@ async function getTimestamp() {
     }
 }
 
-module.exports = { getTimestamp };
+module.exports = { timestamp };
