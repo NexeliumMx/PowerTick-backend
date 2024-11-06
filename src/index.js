@@ -6,5 +6,5 @@ app.setup({
 });
 
 // Import the function files
-require('./functions/getData/index'); // Import getData function
-require('./functions/pushData/index'); // Import pushData function (if it exists)
+require('./functions/pushData/index');
+require('./functions/realtimeData/index');
