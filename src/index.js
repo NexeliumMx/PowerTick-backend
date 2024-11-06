@@ -8,3 +8,4 @@ app.setup({
 // Import the function files
 require('./functions/pushData/index');
 require('./functions/realtimeData/index');
+require('./functions/historicalData/index');

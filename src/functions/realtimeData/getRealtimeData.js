@@ -4,6 +4,7 @@ async function getRealtimeData(schemaName, serialNumber) {
     try {
         const query = `
             SELECT
+                "timestamp",
                 "amps_total",
                 "amps_phase_a",
                 "amps_phase_b",
@@ -67,9 +68,11 @@ async function getRealtimeData(schemaName, serialNumber) {
                 "total_var_hours_exported_q4_phase_c"
             FROM "${schemaName}"."measurements"
             WHERE "serial_number" = $1
+                AND "timestamp" <= DATE_TRUNC('minute', NOW() AT TIME ZONE 'UTC')
             ORDER BY "timestamp" DESC
             LIMIT 1;
         `;
+        
         const values = [serialNumber];
         const result = await client.query(query, values);
 
@@ -80,6 +83,7 @@ async function getRealtimeData(schemaName, serialNumber) {
             const parseToNumber = (value) => (value === null ? null : Number(value));
 
             const realtimeData = {
+                timestamp: row.timestamp,  // Add timestamp to the output
                 amps_total: parseToNumber(row.amps_total),
                 amps_phase_a: parseToNumber(row.amps_phase_a),
                 amps_phase_b: parseToNumber(row.amps_phase_b),
