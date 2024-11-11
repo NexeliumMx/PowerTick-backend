@@ -1,26 +1,7 @@
 SET CONSTRAINTS ALL DEFERRED;
 
-CREATE SCHEMA IF NOT EXISTS Demo;
-SET search_path TO Demo;
-
-CREATE TABLE IF NOT EXISTS Brokers (
-  broker_name TEXT PRIMARY KEY,
-  clients INT NOT NULL,
-  facturation INT NOT NULL,
-  contract_date TIMESTAMPTZ NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS clients (
-  client TEXT PRIMARY KEY,
-  broker TEXT NOT NULL,
-  cloud_services BOOLEAN NOT NULL,
-  payment BOOLEAN NOT NULL,
-  payment_amount INT NOT NULL,
-  FOREIGN KEY (broker)
-    REFERENCES Brokers (broker_name)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-);
+CREATE SCHEMA IF NOT EXISTS powertic;
+SET search_path TO powertic;
 
 CREATE TABLE IF NOT EXISTS Meters (
   serial_number TEXT PRIMARY KEY,
@@ -128,12 +109,31 @@ CREATE TABLE IF NOT EXISTS Measurements (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 );
+CREATE TABLE IF NOT EXISTS clients (
+  client TEXT PRIMARY KEY,
+  broker TEXT NOT NULL,
+  cloud_services BOOLEAN NOT NULL,
+  payment BOOLEAN NOT NULL,
+  payment_amount INT NOT NULL,
+  FOREIGN KEY (broker)
+    REFERENCES Brokers (broker_name)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+);
+
+
+
+
+
+
+
+
 
 SET CONSTRAINTS ALL IMMEDIATE;
 
 -- Insert default values
-INSERT INTO demo.brokers (broker_name, clients, facturation, contract_date) 
+INSERT INTO powertic.brokers (broker_name, clients, facturation, contract_date) 
 VALUES ('not_set', 0, 0, NOW());
 
-INSERT INTO demo.clients (broker, client, cloud_services, payment, payment_amount) 
+INSERT INTO powertic.clients (broker, client, cloud_services, payment, payment_amount) 
 VALUES ('not_set', 'not_set', FALSE, FALSE, 0);
