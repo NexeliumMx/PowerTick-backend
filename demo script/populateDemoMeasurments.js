@@ -147,7 +147,7 @@ async function insertMeasurements() {
       cumulative_var_hours_imported_q2_phase_c = Math.round(cumulative_var_hours_imported_q2_phase_c + var_phase_c * interval_hours);
 
       const query = `
-      INSERT INTO demo.Measurements (
+      INSERT INTO demo.measurements (
           "timestamp", amps_total, amps_phase_a, amps_phase_b, amps_phase_c,
           voltage_ln_average, phase_voltage_an, phase_voltage_bn, phase_voltage_cn,
           voltage_ll_average, phase_voltage_ab, phase_voltage_bc, phase_voltage_ca,
