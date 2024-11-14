@@ -62,7 +62,7 @@ async function insertMeasurements() {
       const amps_phase_b = getRandom(100, 980);
       const amps_phase_c = getRandom(100, 980);
       const amps_total = amps_phase_a + amps_phase_b + amps_phase_c;
-      
+
       const phase_voltage_an = getRandom(125, 130);
       const phase_voltage_bn = getRandom(125, 130);
       const phase_voltage_cn = getRandom(125, 130);
@@ -80,22 +80,22 @@ async function insertMeasurements() {
       const phase_voltage_ab = Math.round(
         Math.sqrt(
           Math.pow(phase_voltage_an, 2) +
-            Math.pow(phase_voltage_bn, 2) - 
-            2 * phase_voltage_an * phase_voltage_bn * Math.cos(angle)
+          Math.pow(phase_voltage_bn, 2) -
+          2 * phase_voltage_an * phase_voltage_bn * Math.cos(angle)
         )
       );
       const phase_voltage_bc = Math.round(
         Math.sqrt(
           Math.pow(phase_voltage_bn, 2) +
-            Math.pow(phase_voltage_cn, 2) - 
-            2 * phase_voltage_bn * phase_voltage_cn * Math.cos(angle)
+          Math.pow(phase_voltage_cn, 2) -
+          2 * phase_voltage_bn * phase_voltage_cn * Math.cos(angle)
         )
       );
       const phase_voltage_ca = Math.round(
         Math.sqrt(
           Math.pow(phase_voltage_cn, 2) +
-            Math.pow(phase_voltage_an, 2) - 
-            2 * phase_voltage_cn * phase_voltage_an * Math.cos(angle)
+          Math.pow(phase_voltage_an, 2) -
+          2 * phase_voltage_cn * phase_voltage_an * Math.cos(angle)
         )
       );
       const voltage_ll_average = Math.round(
@@ -129,22 +129,22 @@ async function insertMeasurements() {
       const reactive_power_var = var_phase_a + var_phase_b + var_phase_c;
 
       const interval_hours = 5 / 60; // 5 minutes interval in hours
-      cumulative_real_energy_imported += total_real_power * interval_hours;
-      cumulative_watt_hours_imported_phase_a += watts_phase_a * interval_hours;
-      cumulative_watt_hours_imported_phase_b += watts_phase_b * interval_hours;
-      cumulative_watt_hours_imported_phase_c += watts_phase_c * interval_hours;
-      cumulative_va_hours_imported += ac_apparent_power_va * interval_hours;
-      cumulative_va_hours_imported_phase_a += va_phase_a * interval_hours;
-      cumulative_va_hours_imported_phase_b += va_phase_b * interval_hours;
-      cumulative_va_hours_imported_phase_c += va_phase_c * interval_hours;
-      cumulative_var_hours_imported_q1 += reactive_power_var * interval_hours;
-      cumulative_var_hours_imported_q1_phase_a += var_phase_a * interval_hours;
-      cumulative_var_hours_imported_q1_phase_b += var_phase_b * interval_hours;
-      cumulative_var_hours_imported_q1_phase_c += var_phase_c * interval_hours;
-      cumulative_var_hours_imported_q2 += reactive_power_var * interval_hours;
-      cumulative_var_hours_imported_q2_phase_a += var_phase_a * interval_hours;
-      cumulative_var_hours_imported_q2_phase_b += var_phase_b * interval_hours;
-      cumulative_var_hours_imported_q2_phase_c += var_phase_c * interval_hours;
+      cumulative_real_energy_imported = Math.round(cumulative_real_energy_imported + total_real_power * interval_hours);
+      cumulative_watt_hours_imported_phase_a = Math.round(cumulative_watt_hours_imported_phase_a + watts_phase_a * interval_hours);
+      cumulative_watt_hours_imported_phase_b = Math.round(cumulative_watt_hours_imported_phase_b + watts_phase_b * interval_hours);
+      cumulative_watt_hours_imported_phase_c = Math.round(cumulative_watt_hours_imported_phase_c + watts_phase_c * interval_hours);
+      cumulative_va_hours_imported = Math.round(cumulative_va_hours_imported + ac_apparent_power_va * interval_hours);
+      cumulative_va_hours_imported_phase_a = Math.round(cumulative_va_hours_imported_phase_a + va_phase_a * interval_hours);
+      cumulative_va_hours_imported_phase_b = Math.round(cumulative_va_hours_imported_phase_b + va_phase_b * interval_hours);
+      cumulative_va_hours_imported_phase_c = Math.round(cumulative_va_hours_imported_phase_c + va_phase_c * interval_hours);
+      cumulative_var_hours_imported_q1 = Math.round(cumulative_var_hours_imported_q1 + reactive_power_var * interval_hours);
+      cumulative_var_hours_imported_q1_phase_a = Math.round(cumulative_var_hours_imported_q1_phase_a + var_phase_a * interval_hours);
+      cumulative_var_hours_imported_q1_phase_b = Math.round(cumulative_var_hours_imported_q1_phase_b + var_phase_b * interval_hours);
+      cumulative_var_hours_imported_q1_phase_c = Math.round(cumulative_var_hours_imported_q1_phase_c + var_phase_c * interval_hours);
+      cumulative_var_hours_imported_q2 = Math.round(cumulative_var_hours_imported_q2 + reactive_power_var * interval_hours);
+      cumulative_var_hours_imported_q2_phase_a = Math.round(cumulative_var_hours_imported_q2_phase_a + var_phase_a * interval_hours);
+      cumulative_var_hours_imported_q2_phase_b = Math.round(cumulative_var_hours_imported_q2_phase_b + var_phase_b * interval_hours);
+      cumulative_var_hours_imported_q2_phase_c = Math.round(cumulative_var_hours_imported_q2_phase_c + var_phase_c * interval_hours);
 
       const query = `
       INSERT INTO demo.Measurements (
