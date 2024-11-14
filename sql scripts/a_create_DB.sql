@@ -1,4 +1,4 @@
-CREATE DATABASE "PowerTick"
+CREATE DATABASE "powertick"
     WITH
     OWNER = azure_pg_admin
     ENCODING = 'UTF8'
