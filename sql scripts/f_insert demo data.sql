@@ -45,3 +45,8 @@ INSERT INTO demo.powermeters (
   0,                          -- facturation_interval_months
   27                          -- facturation_day (example day)
 );
+
+
+INSERT INTO public.supported_models (serial, manufacturer, series, model) VALUES
+(1, 'Accuenergy', 'AcuRev 1300', 'acurev-1313-5a-x0'),
+(2, 'Carlo Gavazzi', 'EM210', 'EM210-72D.MV5.3.X.OS.X');
