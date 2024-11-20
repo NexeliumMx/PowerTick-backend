@@ -1,0 +1,24 @@
+psql -h nexelium-pg.postgres.database.azure.com -U arturo.vargas@nexelium.com.mx -d powertick
+
+\COPY modbusrtu_commands (
+    model,
+    modbus_address,
+    parameter,
+    unit,
+    register_length,
+    data_type,
+    r_w,
+    data_range,
+    industry_standard,
+    indb,
+    setup_read,
+    setup_write,
+    "timestamp",
+    read_command,
+    write_command,
+    value_weight
+)
+FROM '/home/avargas/VScode/PowerTick-backend/modbusrtu_commands.csv'
+DELIMITER ',' 
+CSV HEADER 
+NULL '';
