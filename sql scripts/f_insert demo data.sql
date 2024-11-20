@@ -16,6 +16,8 @@ INSERT INTO demo.clients (
   0                         -- payment_amount
 );
 
+
+
 INSERT INTO demo.powermeters (
   client_id,
   serial_number,
@@ -47,6 +49,25 @@ INSERT INTO demo.powermeters (
 );
 
 
-INSERT INTO public.supported_models (serial, manufacturer, series, model) VALUES
-(1, 'Accuenergy', 'AcuRev 1300', 'acurev-1313-5a-x0'),
-(2, 'Carlo Gavazzi', 'EM210', 'EM210-72D.MV5.3.X.OS.X');
+
+
+
+-- Add clients
+INSERT INTO demo.clients (client_id, client_name, register_date, subscription_status, cloud_services_provider, payment, payment_amount)
+VALUES
+    ('TSA123456789', 'Televisa San Ángel S.A. de C.V.', CURRENT_TIMESTAMP, 'active', TRUE, FALSE, 0),
+    ('TCA123456789', 'Televisa Club América S.A. de C.V.', CURRENT_TIMESTAMP, 'active', TRUE, FALSE, 0),
+    ('TEA123456789', 'Televisa Estadio Azteca S.A. de C.V.', CURRENT_TIMESTAMP, 'active', TRUE, FALSE, 0),
+    ('TRA123456789', 'Televisa Radiópolis S.A. de C.V.', CURRENT_TIMESTAMP, 'active', TRUE, FALSE, 0),
+    ('TSF123456789', 'Televisa Santa Fe S.A. de C.V.', CURRENT_TIMESTAMP, 'active', TRUE, FALSE, 0);
+
+-- Add powermeters
+UPDATE demo.powermeters SET client_id = 'TSA123456789' WHERE serial_number = 'DEMO0000001';
+UPDATE demo.powermeters SET client_id = 'TCA123456789' WHERE serial_number = 'DEMO0000002';
+UPDATE demo.powermeters SET client_id = 'TCA123456789' WHERE serial_number = 'DEMO0000003';
+UPDATE demo.powermeters SET client_id = 'TEA123456789' WHERE serial_number = 'DEMO0000004';
+UPDATE demo.powermeters SET client_id = 'TRA123456789' WHERE serial_number = 'DEMO0000005';
+UPDATE demo.powermeters SET client_id = 'TSF123456789' WHERE serial_number = 'DEMO0000006';
+UPDATE demo.powermeters SET client_id = 'TSF123456789' WHERE serial_number = 'DEMO0000007';
+UPDATE demo.powermeters SET client_id = 'TSF123456789' WHERE serial_number = 'DEMO0000008';
+UPDATE demo.powermeters SET client_id = 'TSF123456789' WHERE serial_number = 'DEMO0000009';
