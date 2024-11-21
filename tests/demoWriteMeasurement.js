@@ -5,7 +5,7 @@
   const url = 'http://localhost:7071/api/demoPostAcurev-1313-5a-x0Reading';
   const data = {
       "timestamp": "2024-11-14T22:20:00.000Z",
-      "serial_number": "DEMO0000005",
+      "serial_number": "DEMO0000006",
       "amps_total": 821,
       "amps_phase_a": 118,
       "amps_phase_b": 138,

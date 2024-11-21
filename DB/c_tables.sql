@@ -14,22 +14,22 @@ CREATE TABLE IF NOT EXISTS clients (
 );
 
 CREATE TABLE IF NOT EXISTS powermeters (
-  client_id TEXT NOT NULL,
+  client_id TEXT,
   -- hardware details
   serial_number TEXT PRIMARY KEY,
-  manufacturer TEXT NOT NULL,
-  series TEXT NOT NULL,
-  model TEXT NOT NULL,
+  manufacturer TEXT,
+  series TEXT,
+  model TEXT,
   firmware_v TEXT, 
   -- location details
-  branch TEXT NOT NULL,
-  "location" TEXT NOT NULL, -- CP
-  coordinates TEXT NOT NULL, -- Lat, Long
-  load_center TEXT NOT NULL,
+  branch TEXT,
+  "location" TEXT, -- CP
+  coordinates TEXT, -- Lat, Long
+  load_center TEXT,
   -- dates
-  register_date TIMESTAMPTZ NOT NULL,
-  facturation_interval_months SMALLINT NOT NULL, -- 1 or 2
-  facturation_day SMALLINT NOT NULL, --27
+  register_date TIMESTAMPTZ,
+  facturation_interval_months SMALLINT, -- 1 or 2
+  facturation_day SMALLINT, --27
   UNIQUE (serial_number),
   FOREIGN KEY (client_id)
     REFERENCES clients (client_id)
