@@ -1,7 +1,7 @@
 SET CONSTRAINTS ALL DEFERRED;
 
-CREATE SCHEMA IF NOT EXISTS demo;
-SET search_path TO demo;
+CREATE SCHEMA IF NOT EXISTS dev AUTHORIZATION azure_pg_admin;
+SET search_path TO dev;
 
 CREATE TABLE IF NOT EXISTS clients (
     client_id TEXT PRIMARY KEY, --RFC
@@ -30,45 +30,45 @@ CREATE TABLE IF NOT EXISTS powermeters (
   register_date TIMESTAMPTZ,
   facturation_interval_months SMALLINT, -- 1 or 2
   facturation_day SMALLINT, --27
+  time_zone TEXT, --"America/Mexico_City"
   UNIQUE (serial_number),
   FOREIGN KEY (client_id)
     REFERENCES clients (client_id)
     ON DELETE NO ACTION
 );
 
-
 CREATE TABLE IF NOT EXISTS measurements (
   "timestamp" TIMESTAMPTZ,
   serial_number TEXT,
-  amps_total SMALLINT,
-  amps_phase_a SMALLINT,
-  amps_phase_b SMALLINT,
-  amps_phase_c SMALLINT,
-  voltage_ln_average SMALLINT,
-  phase_voltage_an SMALLINT,
-  phase_voltage_bn SMALLINT,
-  phase_voltage_cn SMALLINT,
-  voltage_ll_average SMALLINT,
-  phase_voltage_ab SMALLINT,
-  phase_voltage_bc SMALLINT,
-  phase_voltage_ca SMALLINT,
-  frequency SMALLINT,
-  total_real_power SMALLINT,
-  watts_phase_a SMALLINT,
-  watts_phase_b SMALLINT,
-  watts_phase_c SMALLINT,
-  ac_apparent_power_va SMALLINT,
-  va_phase_a SMALLINT,
-  va_phase_b SMALLINT,
-  va_phase_c SMALLINT,
-  reactive_power_var SMALLINT,
-  var_phase_a SMALLINT,
-  var_phase_b SMALLINT,
-  var_phase_c SMALLINT,
-  power_factor SMALLINT,
-  pf_phase_a SMALLINT,
-  pf_phase_b SMALLINT,
-  pf_phase_c SMALLINT,
+  amps_total INT,
+  amps_phase_a INT,
+  amps_phase_b INT,
+  amps_phase_c INT,
+  voltage_ln_average INT,
+  phase_voltage_an INT,
+  phase_voltage_bn INT,
+  phase_voltage_cn INT,
+  voltage_ll_average INT,
+  phase_voltage_ab INT,
+  phase_voltage_bc INT,
+  phase_voltage_ca INT,
+  frequency INT,
+  total_real_power INT,
+  watts_phase_a INT,
+  watts_phase_b INT,
+  watts_phase_c INT,
+  ac_apparent_power_va INT,
+  va_phase_a INT,
+  va_phase_b INT,
+  va_phase_c INT,
+  reactive_power_var INT,
+  var_phase_a INT,
+  var_phase_b INT,
+  var_phase_c INT,
+  power_factor INT,
+  pf_phase_a INT,
+  pf_phase_b INT,
+  pf_phase_c INT,
   total_real_energy_exported INT,
   total_watt_hours_exported_in_phase_a INT,
   total_watt_hours_exported_in_phase_b INT,
