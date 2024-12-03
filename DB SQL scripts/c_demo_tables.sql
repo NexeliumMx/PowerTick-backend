@@ -31,6 +31,9 @@ CREATE TABLE IF NOT EXISTS powermeters (
   facturation_interval_months SMALLINT, -- 1 or 2
   facturation_day SMALLINT, --27
   time_zone TEXT, --"America/Mexico_City"
+  device_address SMALLINT,
+  ct INT, -- Current Transformer
+  vt INT, -- Voltage Transformer
   UNIQUE (serial_number),
   FOREIGN KEY (client_id)
     REFERENCES clients (client_id)
