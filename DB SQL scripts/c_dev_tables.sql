@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS powermeters (
   device_address SMALLINT,
   ct INT, -- Current Transformer
   vt INT, -- Voltage Transformer
+  thd_enable BOOLEAN,
   UNIQUE (serial_number),
   FOREIGN KEY (client_id)
     REFERENCES clients (client_id)
