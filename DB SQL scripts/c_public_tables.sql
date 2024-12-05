@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS modbusrtu_commands (
     read_command TEXT DEFAULT NULL,
     write_command TEXT DEFAULT NULL,
     value_weight NUMERIC DEFAULT NULL,
+    "address" INT,
     PRIMARY KEY (model, modbus_address)
 );
 

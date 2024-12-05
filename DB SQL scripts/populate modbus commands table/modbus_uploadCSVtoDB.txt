@@ -16,9 +16,10 @@ psql -h nexelium-pg.postgres.database.azure.com -U arturo.vargas@nexelium.com.mx
     "timestamp",
     read_command,
     write_command,
-    value_weight
+    value_weight,
+    address
 )
-FROM '/home/avargas/VScode/PowerTick-backend/modbusrtu_commands.csv'
+FROM '/home/avargas/VScode/PowerTick-backend/DB SQL scripts/populate modbus commands table/modbus_uploadCSVtoDB.txt'
 DELIMITER ',' 
 CSV HEADER 
 NULL '';
