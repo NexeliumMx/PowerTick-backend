@@ -32,8 +32,8 @@ CREATE TABLE IF NOT EXISTS powermeters (
   facturation_day SMALLINT, --27
   time_zone TEXT, --"America/Mexico_City"
   device_address SMALLINT,
-  ct INT, -- Current Transformer
-  vt INT, -- Voltage Transformer
+  ct_ratio INT, -- Current Transformer
+  vt_ratio INT, -- Voltage Transformer
   thd_enable BOOLEAN,
   UNIQUE (serial_number),
   FOREIGN KEY (client_id)
@@ -105,11 +105,27 @@ CREATE TABLE IF NOT EXISTS measurements (
   total_var_hours_exported_q4_phase_a INT,
   total_var_hours_exported_q4_phase_b INT,
   total_var_hours_exported_q4_phase_c INT,
+  phase_sequence INT,
+  hour_counter INT,
+  hour_counter_neg INT,
+  thd_current_phase_a INT,
+  thd_current_phase_b INT,
+  thd_current_phase_c INT,
+  thd_voltage_average_ln INT,
+  thd_voltage_phase_an INT,
+  thd_voltage_phase_bn INT,
+  thd_voltage_phase_cn INT,
+  thd_voltage_average_ll INT,
+  thd_voltage_phase_ab INT,
+  thd_voltage_phase_bc INT,
+  thd_voltage_phase_ca INT,
+  amps_neutral INT,
   PRIMARY KEY ("timestamp", serial_number),
   FOREIGN KEY (serial_number)
     REFERENCES powermeters (serial_number)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 );
+
 
 SET CONSTRAINTS ALL IMMEDIATE;

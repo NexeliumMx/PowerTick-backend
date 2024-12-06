@@ -15,8 +15,8 @@ CREATE TABLE IF NOT EXISTS modbusrtu_commands (
     setup_read BOOLEAN DEFAULT FALSE,
     setup_write BOOLEAN DEFAULT FALSE,
     "timestamp" BOOLEAN DEFAULT FALSE,
-    read_command TEXT DEFAULT NULL,
-    write_command TEXT DEFAULT NULL,
+    read_command INT DEFAULT NULL,
+    write_command INT DEFAULT NULL,
     value_weight NUMERIC DEFAULT NULL,
     "address" INT,
     PRIMARY KEY (model, modbus_address)
