@@ -30,10 +30,16 @@ CREATE SCHEMA IF NOT EXISTS demo AUTHORIZATION azure_pg_admin;
 SET search_path TO demo;
 
 -- Create users table (Referencing Azure AD B2C)
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE users (
     user_id TEXT PRIMARY KEY,  -- Unique ID from Azure AD B2C
-    email TEXT UNIQUE,         -- Optional: User email for reference
-    full_name TEXT,            -- Optional: User's full name
+    email TEXT UNIQUE NOT NULL, -- User's email
+    full_name TEXT,             -- Full name of the user
+    job_title TEXT,             -- Job title (e.g., CSO, Engineer)
+    city TEXT,                  -- User's city
+    state TEXT,                 -- User's state
+    country TEXT,               -- User's country
+    postal_code TEXT,           -- Postal code
+    street TEXT,                -- Street address
     created_at TIMESTAMPTZ DEFAULT NOW() -- Timestamp of user registration
 );
 
