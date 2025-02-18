@@ -2,7 +2,7 @@
  * FileName: DB SQL scripts/c_demo_tables.sql
  * Author(s): Arturo Vargas
  * Brief: SQL script for creating and managing demo database tables.
- * Date: 2024-08-20
+ * Date: 2024-11-11
  *
  * Description:
  * This script defines the schema and tables for the demo database, including users, clients, 
@@ -13,7 +13,7 @@
  * All rights reserved.
  *
  * Version History:
- * - 2024-08-20: Initial schema creation.
+ * - 2024-11-11: Initial schema creation.
  * - 2024-09-01: Added `clients` table to manage customer information.
  * - 2024-09-11: Created `powermeters` table to store device metadata.
  * - 2024-10-04: Implemented `measurements` table to track power data.

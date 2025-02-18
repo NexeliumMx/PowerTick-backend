@@ -1,3 +1,28 @@
+/**
+ * FileName: DB SQL scripts/c_public_tables.sql
+ * Author(s): Arturo Vargas
+ * Brief: SQL script for creating public schema tables.
+ * Date: 2024-11-11
+ *
+ * Description:
+ * This script creates the necessary tables in the `public` schema for storing 
+ * information related to Modbus RTU commands and supported device models.
+ * It first sets the search path to the `public` schema and then proceeds to create:
+ * - `modbusrtu_commands` table: Stores details about Modbus RTU commands, including 
+ *   parameters like model, modbus address, register length, data type, and command 
+ *   specifics such as read/write permissions and commands. It also includes default 
+ *   values for certain columns and establishes a composite primary key using model 
+ *   and modbus address.
+ * - `supported_models` table: Stores details about supported device models, with 
+ *   information on manufacturer, series, and model. It also defines a unique constraint 
+ *   on the combination of manufacturer, series, and model.
+ * The tables ensure that information related to Modbus commands and device models 
+ * is properly structured and accessible for further operations.
+ *
+ * Copyright (c) 2025 BY: Nexelium Technological Solutions S.A. de C.V.
+ * All rights reserved.
+ */
+
 CREATE SCHEMA IF NOT EXISTS public;
 SET search_path TO public;
 
