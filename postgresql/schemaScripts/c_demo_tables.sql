@@ -1,7 +1,57 @@
+/**
+ * FileName: DB SQL scripts/c_demo_tables.sql
+ * Author(s): Arturo Vargas
+ * Brief: SQL script for creating and managing demo database tables.
+ * Date: 2024-11-11
+ *
+ * Description:
+ * This script defines the schema and tables for the demo database, including users, clients, 
+ * powermeters, and measurements. It ensures proper relationships between entities and 
+ * enforces data integrity constraints. The users table references Azure AD B2C for authentication.
+ *
+ * Copyright (c) 2025 BY: Nexelium Technological Solutions S.A. de C.V.
+ * All rights reserved.
+ *
+ * Version History:
+ * - 2024-11-11: Initial schema creation.
+ * - 2024-09-01: Added `clients` table to manage customer information.
+ * - 2024-09-11: Created `powermeters` table to store device metadata.
+ * - 2024-10-04: Implemented `measurements` table to track power data.
+ * - 2025-02-10: Improved foreign key constraints and optimized indexing.
+ * - 2025-02-17: Added `users` and `user_clients` tables for user management and client assignment.
+ */
+
+-- Ensure constraints are deferred
 SET CONSTRAINTS ALL DEFERRED;
 
 CREATE SCHEMA IF NOT EXISTS demo AUTHORIZATION azure_pg_admin;
+
+-- Set schema context
 SET search_path TO demo;
+
+-- Create users table (Referencing Azure AD B2C)
+CREATE TABLE users (
+    user_id TEXT PRIMARY KEY,  -- Unique ID from Azure AD B2C
+    email TEXT UNIQUE NOT NULL, -- User's email
+    full_name TEXT,             -- Full name of the user
+    job_title TEXT,             -- Job title (e.g., CSO, Engineer)
+    city TEXT,                  -- User's city
+    state TEXT,                 -- User's state
+    country TEXT,               -- User's country
+    postal_code TEXT,           -- Postal code
+    street TEXT,                -- Street address
+    created_at TIMESTAMPTZ DEFAULT NOW() -- Timestamp of user registration
+);
+
+-- Create user_clients table (Many-to-Many relationship between users and clients)
+CREATE TABLE IF NOT EXISTS user_clients (
+    user_id TEXT,
+    client_id TEXT,
+    assigned_at TIMESTAMPTZ DEFAULT NOW(), -- Timestamp of assignment
+    PRIMARY KEY (user_id, client_id), -- Ensure unique assignments
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (client_id) REFERENCES clients(client_id) ON DELETE CASCADE
+);
 
 CREATE TABLE IF NOT EXISTS clients (
     client_id TEXT PRIMARY KEY, --RFC
@@ -17,6 +67,7 @@ CREATE TABLE IF NOT EXISTS powermeters (
   client_id TEXT,
   -- hardware details
   serial_number TEXT PRIMARY KEY,
+  alias TEXT,
   manufacturer TEXT,
   series TEXT,
   model TEXT,
@@ -225,5 +276,5 @@ CREATE TABLE IF NOT EXISTS measurements (
     ON UPDATE NO ACTION
 );
 
-
+-- Re-enable constraints
 SET CONSTRAINTS ALL IMMEDIATE;

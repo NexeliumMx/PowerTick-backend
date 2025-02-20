@@ -1,3 +1,25 @@
+/**
+ * FileName: DB SQL scripts/c_demo_tables.sql
+ * Author(s): Arturo Vargas
+ * Brief: SQL script for creating and managing demo database tables.
+ * Date: 2024-11-11
+ *
+ * Description:
+ * This script defines the schema and tables for the dev database, including users, clients, 
+ * powermeters, and measurements. It ensures proper relationships between entities and 
+ * enforces data integrity constraints.
+ *
+ * Copyright (c) 2025 BY: Nexelium Technological Solutions S.A. de C.V.
+ * All rights reserved.
+ *
+ * Version History:
+ * - 2024-11-11: Initial schema creation.
+ * - 2024-09-01: Added `clients` table to manage customer information.
+ * - 2024-09-11: Created `powermeters` table to store device metadata.
+ * - 2024-10-04: Implemented `measurements` table to track power data.
+ * - 2025-02-10: Improved foreign key constraints and optimized indexing.
+ */
+
 SET CONSTRAINTS ALL DEFERRED;
 
 CREATE SCHEMA IF NOT EXISTS dev AUTHORIZATION azure_pg_admin;
