@@ -36,7 +36,7 @@
  * ---------------------------------------------------------------------------
  */
 
- SELECT
+SELECT
   p.time_zone,   -- Retrieve the powermeter's time zone so we know how to interpret local time
 
   -- Round each measurement’s timestamp down to a 5-minute boundary in the powermeter’s local time
@@ -50,11 +50,23 @@
           ) * interval '1 minute'
     ),
     'YYYY-MM-DD HH24:MI'
-  ) AS local_5_min_interval,
+  ) AS time_range_utc,
+  to_char(
+    date_trunc(
+      'minute',
+      (m."timestamp" AT TIME ZONE p.time_zone)
+        - (
+            extract(minute FROM (m."timestamp" AT TIME ZONE p.time_zone))::int % 5
+          ) * interval '1 minute'
+    ),
+    'YYYY-MM-DD HH24:MI'
+  ) AS time_range_local,
 
   -- Display the real and reactive power from each measurement
-  m."total_real_power"   AS real_power,
-  m."reactive_power_var" AS reactive_power
+  AVG(m."total_real_power") AS average_active_demand,
+  MAX(m."total_real_power") AS max_active_demand,
+  AVG(m."reactive_power_var") AS average_reactive_demand,
+  MAX(m."reactive_power_var") AS peak_reactive_demand
 
 FROM demo.measurements m
 JOIN demo.powermeters p
@@ -67,6 +79,10 @@ WHERE
   -- Restrict to the last hour of measurements in local time
   AND (m."timestamp" AT TIME ZONE p.time_zone) >= (NOW() AT TIME ZONE p.time_zone) - INTERVAL '1 hour'
   AND (m."timestamp" AT TIME ZONE p.time_zone) <  (NOW() AT TIME ZONE p.time_zone)
+GROUP BY
+  p.time_zone,
+  time_range_utc,
+  time_range_local
 ORDER BY
   -- Order results by the computed 5-minute intervals in descending order (most recent first)
-  local_5_min_interval DESC;
+  time_range_local DESC;

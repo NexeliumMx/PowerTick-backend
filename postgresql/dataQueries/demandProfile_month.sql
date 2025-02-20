@@ -40,11 +40,15 @@ SELECT
   to_char(
     date_trunc('day', m."timestamp" AT TIME ZONE p.time_zone),
     'YYYY-MM-DD'
-  ) AS date_in_powermeter_tz,
+  ) AS time_range_utc,
+  to_char(
+    date_trunc('day', m."timestamp" AT TIME ZONE p.time_zone),
+    'YYYY-MM-DD'
+  ) AS time_range_local,
 
   -- Calculate the average and maximum active demand for each local day
   AVG(m."total_real_power") AS average_active_demand,
-  MAX(m."total_real_power") AS peak_active_demand,
+  MAX(m."total_real_power") AS max_active_demand,
 
   -- Calculate the average and maximum reactive demand for each local day
   AVG(m."reactive_power_var") AS average_reactive_demand,

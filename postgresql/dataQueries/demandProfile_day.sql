@@ -39,7 +39,6 @@
  * ---------------------------------------------------------------------------
  */
 
-
 SELECT
   p.time_zone,       -- Display the powermeter's time zone
 
@@ -59,7 +58,7 @@ SELECT
          'HH24'
        )
     || ' Hrs'
-  AS date_hour_range_utc,
+  AS time_range_utc,
 
   -- Build a 24H date-time range string (e.g., "2025-02-19 00-01 Hrs") for the timestamp in the powermeter's local time
   to_char(
@@ -77,11 +76,11 @@ SELECT
          'HH24'
        )
     || ' Hrs'
-  AS date_hour_range_local,
+  AS time_range_local,
 
   -- Calculate the average and maximum active demand for each hour
   AVG(m."total_real_power") AS average_active_demand,
-  MAX(m."total_real_power") AS peak_active_demand,
+  MAX(m."total_real_power") AS max_active_demand,
 
   -- Calculate the average and maximum reactive demand for each hour
   AVG(m."reactive_power_var") AS average_reactive_demand,
