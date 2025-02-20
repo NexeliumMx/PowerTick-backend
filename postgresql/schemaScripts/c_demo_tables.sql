@@ -67,6 +67,7 @@ CREATE TABLE IF NOT EXISTS powermeters (
   client_id TEXT,
   -- hardware details
   serial_number TEXT PRIMARY KEY,
+  alias TEXT,
   manufacturer TEXT,
   series TEXT,
   model TEXT,
