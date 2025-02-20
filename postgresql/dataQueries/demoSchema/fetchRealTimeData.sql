@@ -1,5 +1,5 @@
 /*
- * FileName: postgresql/dataQueries/fetchRealTimeData.sql
+ * FileName: postgresql/dataQueries/demoSchema/fetchRealTimeData.sql
  * Author(s): Arturo Vargas
  * Brief: SQL script for retrieving the latest measurement entry for a specific powermeter.
  * Date: 2025-02-19

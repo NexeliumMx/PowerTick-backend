@@ -1,5 +1,5 @@
 /*
- * FileName: postgresql/dataQueries/fetchPowermetersByUserAccess.sql
+ * FileName: postgresql/dataQueries/demoSchema/fetchPowermetersByUserAccess.sql
  * Author(s): Arturo Vargas
  * Brief: SQL script for retrieving the list of powermeters accessible by a specific user.
  * Date: 2025-02-19
