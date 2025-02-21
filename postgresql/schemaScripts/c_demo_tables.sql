@@ -1,26 +1,3 @@
-/**
- * FileName: DB SQL scripts/c_demo_tables.sql
- * Author(s): Arturo Vargas
- * Brief: SQL script for creating and managing demo database tables.
- * Date: 2024-11-11
- *
- * Description:
- * This script defines the schema and tables for the demo database, including users, clients, 
- * powermeters, and measurements. It ensures proper relationships between entities and 
- * enforces data integrity constraints. The users table references Azure AD B2C for authentication.
- *
- * Copyright (c) 2025 BY: Nexelium Technological Solutions S.A. de C.V.
- * All rights reserved.
- *
- * Version History:
- * - 2024-11-11: Initial schema creation.
- * - 2024-09-01: Added `clients` table to manage customer information.
- * - 2024-09-11: Created `powermeters` table to store device metadata.
- * - 2024-10-04: Implemented `measurements` table to track power data.
- * - 2025-02-10: Improved foreign key constraints and optimized indexing.
- * - 2025-02-17: Added `users` and `user_clients` tables for user management and client assignment.
- */
-
 -- Ensure constraints are deferred
 SET CONSTRAINTS ALL DEFERRED;
 
@@ -28,6 +5,17 @@ CREATE SCHEMA IF NOT EXISTS demo AUTHORIZATION azure_pg_admin;
 
 -- Set schema context
 SET search_path TO demo;
+
+-- Create clients table first
+CREATE TABLE IF NOT EXISTS clients (
+    client_id TEXT PRIMARY KEY, --RFC
+    client_name TEXT, --Razon Social
+    register_date TIMESTAMPTZ NOT NULL,
+    subscription_status VARCHAR(50) NOT NULL,  --"active", "inactive", "trial"
+    cloud_services_provider BOOLEAN NOT NULL, --Is Nexelium providing?
+    payment BOOLEAN NOT NULL,
+    payment_amount INT NOT NULL
+);
 
 -- Create users table (Referencing Azure AD B2C)
 CREATE TABLE users (
@@ -53,16 +41,7 @@ CREATE TABLE IF NOT EXISTS user_clients (
     FOREIGN KEY (client_id) REFERENCES clients(client_id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS clients (
-    client_id TEXT PRIMARY KEY, --RFC
-    client_name TEXT, --Razon Social
-    register_date TIMESTAMPTZ NOT NULL,
-    subscription_status VARCHAR(50) NOT NULL,  --"active", "inactive", "trial"
-    cloud_services_provider BOOLEAN NOT NULL, --Is Nexelium providing?
-    payment BOOLEAN NOT NULL,
-    payment_amount INT NOT NULL
-);
-
+-- Create powermeters table
 CREATE TABLE IF NOT EXISTS powermeters (
   client_id TEXT,
   -- hardware details
@@ -110,7 +89,6 @@ CREATE TABLE IF NOT EXISTS powermeters (
   sunspec_end_lenth_sunspec INT,
   digital_input_status INT,
   current_tariff INT,
-  serial_number INT,
   revision_code INT,
   front_selector_status INT,
   carlo_gavazzi_controls_identification_code INT,
@@ -139,8 +117,10 @@ CREATE TABLE IF NOT EXISTS powermeters (
     ON DELETE NO ACTION
 );
 
+-- Create measurements table
 CREATE TABLE IF NOT EXISTS measurements (
-  "timestamp" TIMESTAMPTZ,
+  "timestamp_utc" TIMESTAMPTZ,
+  "timestamp_tz" TIMESTAMP,
   serial_number TEXT,
   amps_total INT,
   amps_phase_a INT,
@@ -152,7 +132,7 @@ CREATE TABLE IF NOT EXISTS measurements (
   phase_voltage_cn INT,
   voltage_ll_average INT,
   phase_voltage_ab INT,
-  voltage_bc INT,
+  phase_voltage_bc INT,
   phase_voltage_ca INT,
   frequency INT,
   total_real_power INT,
@@ -244,8 +224,6 @@ CREATE TABLE IF NOT EXISTS measurements (
   clock_hour SMALLINT,
   clock_minute SMALLINT,
   clock_second SMALLINT,
-  ac_apparent_power_va INT,
-  reactive_power_var INT,
   dmd_w INT,
   dmd_va INT,
   dmd_watts_total INT,
@@ -265,11 +243,10 @@ CREATE TABLE IF NOT EXISTS measurements (
   input_reactive_power_tariff_4 INT,
   output_active_power_total_demand INT,
   output_reactive_power_total_demand INT,
-  hour_counter INT,
   counter_1 INT,
   counter_2 INT,
   counter_3 INT,
-  PRIMARY KEY ("timestamp", serial_number),
+  PRIMARY KEY ("timestamp_utc", serial_number),
   FOREIGN KEY (serial_number)
     REFERENCES powermeters (serial_number)
     ON DELETE NO ACTION

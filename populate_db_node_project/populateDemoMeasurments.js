@@ -147,8 +147,8 @@ async function insertMeasurements() {
       cumulative_var_hours_imported_q2_phase_c = Math.round(cumulative_var_hours_imported_q2_phase_c + var_phase_c * interval_hours);
 
       const query = `
-      INSERT INTO demo.measurements (
-          "timestamp", amps_total, amps_phase_a, amps_phase_b, amps_phase_c,
+      INSERT INTO energycostforecaster.measurements (
+          "timestamp_utc", "timestamp_tz", amps_total, amps_phase_a, amps_phase_b, amps_phase_c,
           voltage_ln_average, phase_voltage_an, phase_voltage_bn, phase_voltage_cn,
           voltage_ll_average, phase_voltage_ab, phase_voltage_bc, phase_voltage_ca,
           frequency, total_real_power, watts_phase_a, watts_phase_b, watts_phase_c,
@@ -175,12 +175,13 @@ async function insertMeasurements() {
           $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18,
           $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34,
           $35, $36, $37, $38, $39, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $50,
-          $51, $52, $53, $54, $55, $56, $57, $58, $59, $60, $61, $62, $63
+          $51, $52, $53, $54, $55, $56, $57, $58, $59, $60, $61, $62, $63, $64
       )
       `;
 
       const values = [
-        timestamp.toISO(),
+        timestamp.toISO(), // timestamp_utc
+        timestamp.toISO({ includeOffset: false }), // timestamp_tz
         amps_total,
         amps_phase_a,
         amps_phase_b,
