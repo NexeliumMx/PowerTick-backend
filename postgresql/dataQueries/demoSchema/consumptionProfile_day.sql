@@ -1,6 +1,6 @@
 /*
  * FileName: postgresql/dataQueries/demoSchema/consumptionProfile_day.sql
- * Author(s): Rogelio Leon, Arturo Vargas
+ * Author(s): Arturo Vargas
  * Brief: SQL script for querying and computing energy consumption (Wh/VArh) in 1-hour intervals over the last 24 hours.
  * Date: 2025-02-20
  *
