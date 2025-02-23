@@ -2,7 +2,7 @@
  * FileName: postgresql/dataQueries/fetchData/fetchRealTimeData.sql
  * Author(s): Arturo Vargas
  * Brief: SQL script for retrieving the latest measurement entry for a specific powermeter.
- * Date: 2025-02-19
+ * Date: 2025-02-22
  *
  * Description:
  * This script first verifies if a specific user has access to read the properties of a powermeter 
