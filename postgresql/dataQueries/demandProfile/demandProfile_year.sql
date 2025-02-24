@@ -1,5 +1,5 @@
 /*
- * FileName: postgresql/dataQueries/demandProfile_analisis/demandProfile_year.sql
+ * FileName: postgresql/dataQueries/demandProfile/demandProfile_year.sql
  * Author(s): Rogelio Leon, Arturo Vargas
  * Brief: SQL script for querying and computing power demand measurements (W/VAr) in 1-month intervals over the past 12 months.
  * Date: 2025-02-23
