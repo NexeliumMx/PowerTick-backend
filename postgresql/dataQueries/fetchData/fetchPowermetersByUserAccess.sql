@@ -28,6 +28,12 @@
  * Example:
  * WHERE user_id = '4c7c56fe-99fc-4611-b57a-0d5683f9bc95';
  * ---------------------------------------------------------------------------
+ * Tables and Columns Accessed:
+ * 1. powermeters
+ *    Columns: serial_number, installation_id
+ * 2. user_installations
+ *    Columns: user_id, installation_id
+ * ---------------------------------------------------------------------------
  */
 
 -- Adjust to desired schema

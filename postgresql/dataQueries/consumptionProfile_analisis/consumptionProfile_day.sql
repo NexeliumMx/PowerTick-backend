@@ -27,17 +27,13 @@
  * Example:
  * WHERE user_id = '4c7c56fe-99fc-4611-b57a-0d5683f9bc95' AND serial_number = 'DEMO000001'
  * ---------------------------------------------------------------------------
- *
  * Tables and Columns Accessed:
- *
- * powermeters
- * Columns: serial_number, time_zone
- *
- * user_installations
- * Columns: user_id, installation_id
- *
- * measurements
- * Columns: serial_number, timestamp_tz, total_real_energy_imported, total_var_hours_imported_q1
+ * 1. powermeters
+ *    Columns: serial_number, time_zone
+ * 2. user_installations
+ *    Columns: user_id, installation_id
+ * 3. measurements
+ *    Columns: serial_number, timestamp_tz, total_real_energy_imported, total_var_hours_imported_q1
  * ---------------------------------------------------------------------------
  */
 

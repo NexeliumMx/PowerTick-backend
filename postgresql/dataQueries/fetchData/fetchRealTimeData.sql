@@ -9,6 +9,9 @@
  * by checking the user_installations table. If the user has access, it retrieves the latest entry 
  * from the measurements table for the specified powermeter.
  *
+ * Copyright (c) 2025 BY: Nexelium Technological Solutions S.A. de C.V.
+ * All rights reserved.
+ *
  * ---------------------------------------------------------------------------
  * Code Description:
  * 1. Common Table Expression (CTE): The query uses a CTE named user_access to check if the user 
@@ -26,6 +29,14 @@
  *
  * Example:
  * WHERE ui.user_id = '4c7c56fe-99fc-4611-b57a-0d5683f9bc95' AND p.serial_number = 'DEMO000001';
+ * ---------------------------------------------------------------------------
+ * Tables and Columns Accessed:
+ * 1. powermeters
+ *    Columns: serial_number, time_zone
+ * 2. user_installations
+ *    Columns: user_id, installation_id
+ * 3. measurements
+ *    Columns: serial_number, timestamp_tz, total_real_power, reactive_power_var
  * ---------------------------------------------------------------------------
  */
 

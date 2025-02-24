@@ -37,14 +37,14 @@ VALUES ((SELECT client_id FROM demo.clients WHERE client_alias = 'Demo Client'),
 
 -- Create a powermeter for the installation
 INSERT INTO demo.powermeters (serial_number, client_id, installation_id, powermeter_alias) 
-VALUES ('DEMO000001', 
+VALUES ('DEMO000010', 
         (SELECT client_id FROM demo.clients WHERE client_alias = 'Demo Client'), 
         (SELECT installation_id FROM demo.installations WHERE installation_alias = 'Demo Installation'), 
         'Demo Powermeter');
 
 -- Create a measurement for the powermeter
 INSERT INTO demo.measurements ("timestamp_utc", serial_number, amps_total) 
-VALUES (NOW(), 'DEMO000001', 100);
+VALUES (NOW(), 'DEMO000010', 100);
 
 -- Verify the data
 SELECT * FROM demo.clients;
