@@ -2,69 +2,89 @@
  * FileName: postgresql/dataQueries/demoSchema/consumptionProfile_day.sql
  * Author(s): Arturo Vargas
  * Brief: SQL script for querying and computing energy consumption (Wh/VArh) in 1-hour intervals over the last 24 hours.
- * Date: 2025-02-20
+ * Date: 2025-02-23
  *
  * Description:
- * This script queries the demo.measurements table to compute the consumption of real energy and reactive energy 
- * for each hour in the past 24 hours. It ensures that the requesting user has access to the specified powermeter ('DEMO0000001')
- * by joining with the demo.powermeters and demo.user_clients tables. All measurement timestamps are converted to the powermeter's 
- * local time zone, truncated to the hour boundary, and formatted for clear output.
+ * This SQL script calculates the energy consumption (in Wh and VArh) for a specific powermeter over the last 24 hours.
+ * The script first verifies that the user has access to the powermeter parameters by checking the user_id and serial_number.
+ * It then calculates the consumption for each hour by comparing the last entry of each hour with the last entry of the previous hour.
  *
  * Copyright (c) 2025 BY: Nexelium Technological Solutions S.A. de C.V.
  * All rights reserved.
  *
  * ---------------------------------------------------------------------------
  * Code Description:
- * 1. Joins: The query joins the measurements (m) table with the powermeters (p) and user_clients (uc) tables to verify that
- *    the requesting user is authorized to access data for the specified powermeter.
- *
- * 2. Time Zone Conversion: Each measurement's timestamp is converted from UTC to the powermeter's local time using the 'AT TIME ZONE' clause.
- *
- * 3. Hourly Aggregation: The converted timestamp is truncated to the hour boundary and formatted as 'YYYY-MM-DD HH24' to display the date and hour in local time.
- *
- * 4. Consumption Calculation: For each hour, the query calculates the difference between the oldest and newest measurements 
- *    for both real energy (total_real_energy_imported) and reactive energy (total_var_hours_imported_q1).
- *
- * 5. Filtering: The query limits results to measurements taken within the past 24 hours, based on the powermeter's local time.
- *
- * 6. Grouping and Ordering: Data is grouped by the powermeter’s time zone and the local hour, and ordered in descending order so that the most recent hour appears first.
+ * 1. Set the search path to the desired schema.
+ * 2. Define a CTE (Common Table Expression) `user_access` to verify that the user has access to the powermeter parameters.
+ * 3. Define a CTE `last_entries` to get the last entry of each hour for the specified powermeter.
+ * 4. Define a CTE `hourly_data` to select the distinct last entry for each hour.
+ * 5. Define a CTE `previous_hour_data` to get the previous hour's values for comparison.
+ * 6. Calculate the consumption for each hour by comparing the last entry of the current hour with the last entry of the previous hour.
+ * 7. Select the results for the last 24 hours and order them by hour in descending order.
  *
  * Example:
- * WHERE user_id = '4c7c56fe-99fc-4611-b57a-0d5683f9bc95' AND serial_number = 'DEMO0000001'
+ * WHERE user_id = '4c7c56fe-99fc-4611-b57a-0d5683f9bc95' AND serial_number = 'DEMO000001'
  * ---------------------------------------------------------------------------
  */
 
-WITH hourly_data AS (
-  SELECT
-    p.time_zone,
-    to_char(
-      date_trunc('hour', m."timestamp" AT TIME ZONE p.time_zone),
-      'YYYY-MM-DD HH24'
-    ) AS time_range_local,
-    m."total_real_energy_imported",
-    m."total_var_hours_imported_q1",
-    row_number() OVER (PARTITION BY p.time_zone, date_trunc('hour', m."timestamp" AT TIME ZONE p.time_zone) ORDER BY m."timestamp" AT TIME ZONE p.time_zone ASC) AS row_asc,
-    row_number() OVER (PARTITION BY p.time_zone, date_trunc('hour', m."timestamp" AT TIME ZONE p.time_zone) ORDER BY m."timestamp" AT TIME ZONE p.time_zone DESC) AS row_desc
-  FROM demo.measurements m
-  JOIN demo.powermeters p
-    ON m.serial_number = p.serial_number
-  JOIN demo.user_clients uc
-    ON p.client_id = uc.client_id
-  WHERE 
-    uc.user_id = '4c7c56fe-99fc-4611-b57a-0d5683f9bc95'
-    AND p.serial_number = 'DEMO0000001'
-    AND (m."timestamp" AT TIME ZONE p.time_zone) >= (NOW() AT TIME ZONE p.time_zone) - INTERVAL '24 hours'
-    AND (m."timestamp" AT TIME ZONE p.time_zone) < (NOW() AT TIME ZONE p.time_zone)
-)
+-- Adjust to desired schema
+SET search_path TO demo;
 
-SELECT
-  time_zone,
-  time_range_local,
-  MAX(CASE WHEN row_desc = 1 THEN total_real_energy_imported END) - MIN(CASE WHEN row_asc = 1 THEN total_real_energy_imported END) AS real_energy_consumption_profile_Wh,
-  MAX(CASE WHEN row_desc = 1 THEN total_var_hours_imported_q1 END) - MIN(CASE WHEN row_asc = 1 THEN total_var_hours_imported_q1 END) AS reactive_energy_consumption_profile_VARh
-FROM hourly_data
-GROUP BY
-  time_zone,
-  time_range_local
-ORDER BY
-  time_range_local DESC;
+-- Define the user_id and powermeter serial_number
+WITH user_access AS (
+    SELECT 
+        1
+    FROM 
+        powermeters p
+    JOIN 
+        user_installations ui ON p.installation_id = ui.installation_id
+    WHERE 
+        ui.user_id = '4c7c56fe-99fc-4611-b57a-0d5683f9bc95' -- Replace with the actual user_id
+        AND p.serial_number = 'DEMO000001' -- Replace with the actual serial_number
+),
+last_entries AS (
+    SELECT 
+        "timestamp_tz", 
+        total_real_energy_imported, 
+        total_var_hours_imported_q1,
+        date_trunc('hour', "timestamp_tz") AS hour
+    FROM 
+        measurements
+    WHERE 
+        serial_number = 'DEMO000001'
+        AND "timestamp_tz" < NOW()
+        AND EXISTS (SELECT 1 FROM user_access)
+    ORDER BY 
+        "timestamp_tz" DESC
+),
+hourly_data AS (
+    SELECT DISTINCT ON (hour)
+        hour,
+        "timestamp_tz",
+        total_real_energy_imported,
+        total_var_hours_imported_q1
+    FROM 
+        last_entries
+    ORDER BY 
+        hour, "timestamp_tz" DESC
+),
+previous_hour_data AS (
+    SELECT 
+        hour,
+        LAG(total_real_energy_imported) OVER (ORDER BY hour) AS prev_real_energy_imported,
+        LAG(total_var_hours_imported_q1) OVER (ORDER BY hour) AS prev_var_hours_imported
+    FROM 
+        hourly_data
+)
+SELECT 
+    hd.hour,
+    hd.total_real_energy_imported - phd.prev_real_energy_imported AS real_energy_consumed_wh,
+    hd.total_var_hours_imported_q1 - phd.prev_var_hours_imported AS var_hours_consumed_varh
+FROM 
+    hourly_data hd
+JOIN 
+    previous_hour_data phd ON hd.hour = phd.hour
+WHERE 
+    hd.hour >= date_trunc('hour', NOW()) - INTERVAL '24 hours'
+ORDER BY 
+    hd.hour DESC;
