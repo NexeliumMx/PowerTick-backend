@@ -1,5 +1,5 @@
 /*
- * FileName: postgresql/dataQueries/demoSchema/consumptionProfile_day.sql
+ * FileName: postgresql/dataQueries/consumptionProfile_analisis/consumptionProfile_day.sql
  * Author(s): Arturo Vargas
  * Brief: SQL script for querying and computing energy consumption (Wh/VArh) in 1-hour intervals over the last 24 hours.
  * Date: 2025-02-23
@@ -33,7 +33,7 @@
  * 2. user_installations
  *    Columns: user_id, installation_id
  * 3. measurements
- *    Columns: serial_number, timestamp_tz, total_real_energy_imported, total_var_hours_imported_q1
+ *    Columns: serial_number, timestamp_tz, timestamp_utc, total_real_energy_imported, total_var_hours_imported_q1
  * ---------------------------------------------------------------------------
  */
 
@@ -63,9 +63,11 @@ powermeter_time_zone AS (
 last_entries AS (
     SELECT 
         "timestamp_tz", 
+        "timestamp_utc",
         total_real_energy_imported, 
         total_var_hours_imported_q1,
-        date_trunc('hour', "timestamp_tz") AS hour
+        date_trunc('hour', "timestamp_tz") AS hour,
+        date_trunc('hour', "timestamp_utc") AS hour_utc
     FROM 
         measurements
     WHERE 
@@ -78,6 +80,7 @@ last_entries AS (
 hourly_data AS (
     SELECT DISTINCT ON (hour)
         hour,
+        hour_utc,
         "timestamp_tz",
         total_real_energy_imported,
         total_var_hours_imported_q1
@@ -95,9 +98,10 @@ previous_hour_data AS (
         hourly_data
 )
 SELECT 
-    hd.hour,
-    hd.total_real_energy_imported - phd.prev_real_energy_imported AS real_energy_consumed_wh,
-    hd.total_var_hours_imported_q1 - phd.prev_var_hours_imported AS var_hours_consumed_varh
+    TO_CHAR(hd.hour_utc, 'YYYY-MM-DD HH24') || '-' || TO_CHAR(hd.hour_utc + INTERVAL '1 hour', 'HH24') AS consumption_profile_hour_range_utc,
+    TO_CHAR(hd.hour, 'YYYY-MM-DD HH24') || '-' || TO_CHAR(hd.hour + INTERVAL '1 hour', 'HH24') AS consumption_profile_hour_range_tz,
+    hd.total_real_energy_imported - phd.prev_real_energy_imported AS real_energy_wh,
+    hd.total_var_hours_imported_q1 - phd.prev_var_hours_imported AS reactive_energy_varh
 FROM 
     hourly_data hd
 JOIN 

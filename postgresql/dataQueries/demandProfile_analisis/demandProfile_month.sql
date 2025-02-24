@@ -1,5 +1,5 @@
 /*
- * FileName: postgresql/dataQueries/demoSchema/demandProfile_month.sql
+ * FileName: postgresql/dataQueries/demandProfile_analisis/demandProfile_month.sql
  * Author(s): Rogelio Leon, Arturo Vargas
  * Brief: SQL script for querying and computing power demand measurements (W/VAr) in 1-day intervals over the past 30 days.
  * Date: 2025-02-23
@@ -73,9 +73,9 @@ daily_data AS (
         date_trunc('day', "timestamp_tz")
 )
 SELECT 
-    day,
-    avg_total_real_power,
-    max_total_real_power,
+    TO_CHAR(day, 'YYYY-MM-DD') AS demand_profile_day_range_tz,
+    avg_total_real_power AS avg_real_power_w,
+    max_total_real_power AS max_real_power_w,
     avg_reactive_power_var,
     max_reactive_power_var
 FROM 

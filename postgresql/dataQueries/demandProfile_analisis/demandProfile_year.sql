@@ -1,5 +1,5 @@
 /*
- * FileName: postgresql/dataQueries/demoSchema/demandProfile_year.sql
+ * FileName: postgresql/dataQueries/demandProfile_analisis/demandProfile_year.sql
  * Author(s): Rogelio Leon, Arturo Vargas
  * Brief: SQL script for querying and computing power demand measurements (W/VAr) in 1-month intervals over the past 12 months.
  * Date: 2025-02-23
@@ -73,9 +73,9 @@ monthly_data AS (
         date_trunc('month', "timestamp_tz")
 )
 SELECT 
-    month,
-    avg_total_real_power,
-    max_total_real_power,
+  TO_CHAR(month, 'YYYY-MM') AS demand_profile_day_range_tz,
+    avg_total_real_power AS avg_real_power_w,
+    max_total_real_power AS max_real_power_w,
     avg_reactive_power_var,
     max_reactive_power_var
 FROM 

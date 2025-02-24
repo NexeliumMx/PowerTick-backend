@@ -1,5 +1,5 @@
 /*
- * FileName: postgresql/dataQueries/demoSchema/demandProfile_day.sql
+ * FileName: postgresql/dataQueries/demandProfile_analisis/demandProfile_day.sql
  * Author(s): Rogelio Leon, Arturo Vargas
  * Brief: SQL script for querying and computing power demand measurements (W/VAr) in 1-hour intervals over the last 24 hours.
  * Date: 2025-02-23
@@ -29,7 +29,7 @@
  * 2. user_installations
  *    Columns: user_id, installation_id
  * 3. measurements
- *    Columns: serial_number, timestamp_tz, total_real_power, reactive_power_var
+ *    Columns: serial_number, timestamp_tz, timestamp_utc, total_real_power, reactive_power_var
  * ---------------------------------------------------------------------------
  */
 
@@ -59,6 +59,7 @@ powermeter_time_zone AS (
 hourly_data AS (
     SELECT 
         date_trunc('hour', "timestamp_tz") AS hour,
+        date_trunc('hour', "timestamp_utc") AS hour_utc,
         AVG(total_real_power) AS avg_total_real_power,
         MAX(total_real_power) AS max_total_real_power,
         AVG(reactive_power_var) AS avg_reactive_power_var,
@@ -70,12 +71,13 @@ hourly_data AS (
         AND "timestamp_tz" < NOW() AT TIME ZONE (SELECT time_zone FROM powermeter_time_zone)
         AND EXISTS (SELECT 1 FROM user_access)
     GROUP BY 
-        date_trunc('hour', "timestamp_tz")
+        date_trunc('hour', "timestamp_tz"), date_trunc('hour', "timestamp_utc")
 )
 SELECT 
-    hour,
-    avg_total_real_power,
-    max_total_real_power,
+    TO_CHAR(hour_utc, 'YYYY-MM-DD HH24') || '-' || TO_CHAR(hour_utc + INTERVAL '1 hour', 'HH24') AS demand_profile_hour_range_utc,
+    TO_CHAR(hour, 'YYYY-MM-DD HH24') || '-' || TO_CHAR(hour + INTERVAL '1 hour', 'HH24') AS demand_profile_hour_range_tz,
+    avg_total_real_power AS avg_real_power_w,
+    max_total_real_power AS max_real_power_w,
     avg_reactive_power_var,
     max_reactive_power_var
 FROM 

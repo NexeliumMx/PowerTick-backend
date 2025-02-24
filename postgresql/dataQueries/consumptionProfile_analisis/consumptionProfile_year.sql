@@ -1,5 +1,5 @@
 /*
- * FileName: postgresql/dataQueries/demoSchema/consumptionProfile_year.sql
+ * FileName: postgresql/dataQueries/consumptionProfile_analisis/consumptionProfile_year.sql
  * Author(s): Arturo Vargas
  * Brief: SQL script for querying and computing energy consumption (Wh/VArh) in 1-month intervals over the past 12 months.
  * Date: 2025-02-23
@@ -95,9 +95,9 @@ previous_month_data AS (
         monthly_data
 )
 SELECT 
-    md.month,
-    md.total_real_energy_imported - pmd.prev_real_energy_imported AS real_energy_consumed_wh,
-    md.total_var_hours_imported_q1 - pmd.prev_var_hours_imported AS var_hours_consumed_varh
+    TO_CHAR(md.month, 'YYYY-MM') AS consumption_profile_month_range_tz,
+    md.total_real_energy_imported - pmd.prev_real_energy_imported AS real_energy_wh,
+    md.total_var_hours_imported_q1 - pmd.prev_var_hours_imported AS reactive_energy_varh
 FROM 
     monthly_data md
 JOIN 
