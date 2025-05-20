@@ -122,7 +122,7 @@ CREATE TABLE IF NOT EXISTS powermeters (
   reset_hour_counter INT,
   reset_counters INT,
   reset_dmd_max INT,
-  contract_id NULL,
+  contract_id UUID NULL,
   UNIQUE (serial_number),
   FOREIGN KEY (client_id) REFERENCES clients(client_id) ON DELETE CASCADE,
   FOREIGN KEY (installation_id) REFERENCES installations(installation_id) ON DELETE CASCADE
