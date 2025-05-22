@@ -21,10 +21,15 @@
  *
  * Copyright (c) 2025 BY: Nexelium Technological Solutions S.A. de C.V.
  * All rights reserved.
+ *
+ * Change Log:
+ * - 2025-05-22:
+ *   - Added: CREATE EXTENSION IF NOT EXISTS "uuid-ossp" SCHEMA public; to ensure uuid_generate_v4() is available in the public schema.
  */
 
 CREATE SCHEMA IF NOT EXISTS public;
 SET search_path TO public;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp" SCHEMA public;
 
 CREATE TABLE IF NOT EXISTS modbusrtu_commands (
     model TEXT,

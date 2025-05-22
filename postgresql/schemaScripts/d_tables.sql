@@ -1,11 +1,11 @@
 /**
- * FileName: postgresql/schemaScripts/c_demo_tables.sql
+ * FileName: postgresql/schemaScripts/c_dev_tables.sql
  * Author(s): Arturo Vargas
- * Brief: SQL script for creating the demo schema and related tables for the PowerTick database.
+ * Brief: SQL script for creating the dev schema and related tables for the PowerTick database.
  * Date: 2025-02-22
  *
  * Description:
- * This script creates the `demo` schema and several tables within it, including `clients`, 
+ * This script creates the `dev` schema and several tables within it, including `clients`, 
  * `installations`, `users`, `user_clients`, `user_installations`, `powermeters`, and `measurements`. 
  * It sets up the necessary relationships and constraints between these tables, ensuring referential 
  * integrity with cascading deletes where appropriate. The script also includes the creation of 
@@ -25,28 +25,33 @@
  *
  * Copyright (c) 2025 BY: Nexelium Technological Solutions S.A. de C.V.
  * All rights reserved.
+ *
+ * Change Log:
+ * - 2025-05-19: 
+ *   - Removed contract_id from powermeters table.
+ *   - Added region TEXT, tarifa TEXT, capacidad_instalada INT to installations table.
+ * - 2025-05-22:
+ *   - Changed DEFAULT uuid_generate_v4() to public.uuid_generate_v4() in clients and installations tables to fix function not found error.
  */
 
 -- Ensure constraints are deferred
 SET CONSTRAINTS ALL DEFERRED;
 
-CREATE SCHEMA IF NOT EXISTS demo AUTHORIZATION azure_pg_admin;
+CREATE SCHEMA IF NOT EXISTS dev AUTHORIZATION azure_pg_admin;
 
 -- Set schema context
-SET search_path TO demo;
-
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+SET search_path TO dev;
 
 -- Create clients table first
 CREATE TABLE IF NOT EXISTS clients (
-    client_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), -- Auto-generated UUID
+    client_id UUID PRIMARY KEY DEFAULT public.uuid_generate_v4(), -- Auto-generated UUID
     client_alias TEXT,
     register_date TIMESTAMPTZ DEFAULT NOW() -- Timestamp of client registration
 );
 
 -- Create installations table
 CREATE TABLE IF NOT EXISTS installations (
-    installation_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(), -- Auto-generated UUID
+    installation_id UUID PRIMARY KEY DEFAULT public.uuid_generate_v4(), -- Auto-generated UUID
     client_id UUID,
     installation_alias TEXT,
     installation_date TIMESTAMPTZ,
@@ -230,3 +235,13 @@ CREATE TABLE IF NOT EXISTS measurements (
 
 -- Re-enable constraints
 SET CONSTRAINTS ALL IMMEDIATE;
+
+-- Transfer ownership of schema and all tables to 'azure_pg_admin'
+ALTER SCHEMA dev OWNER TO azure_pg_admin;
+ALTER TABLE clients OWNER TO azure_pg_admin;
+ALTER TABLE installations OWNER TO azure_pg_admin;
+ALTER TABLE users OWNER TO azure_pg_admin;
+ALTER TABLE user_clients OWNER TO azure_pg_admin;
+ALTER TABLE user_installations OWNER TO azure_pg_admin;
+ALTER TABLE powermeters OWNER TO azure_pg_admin;
+ALTER TABLE measurements OWNER TO azure_pg_admin;
